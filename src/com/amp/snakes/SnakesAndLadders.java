@@ -3,7 +3,7 @@
 // Due Date: February 4th
 // Question: Part I
 // Written by: Augusto Mota Pinheiro (40208080)
-//             Michaël Gugliandolo (XXXXXXXX)
+//             Michaël Gugliandolo (40213419)
 // -----------------------------------------------------
 
 package com.amp.snakes;
