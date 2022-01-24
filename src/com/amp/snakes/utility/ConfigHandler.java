@@ -35,7 +35,10 @@ public class ConfigHandler {
             rawConfigScanner.nextLine();
 
             //Inspired from here: https://stackoverflow.com/questions/19320183/1d-array-to-2d-array-mapping
-            board[index / boardSize][index % boardSize] = new Square(linkedSquare, index + 1, squareType);
+            int row = index / boardSize;
+
+            //if it's an odd-numbered row, flip it to match a real board configuration
+            board[row][row % 2 != 0 ?  boardSize - 1 - index % boardSize : index % boardSize] = new Square(linkedSquare, index + 1, squareType);
             index++;
         }
         return board;

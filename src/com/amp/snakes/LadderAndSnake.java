@@ -20,6 +20,7 @@ public class LadderAndSnake {
     private final int NB_PLAYERS;
 
     /* ACCESSORS & MUTATORS */
+
     public Square[][] getGAME_BOARD() {
         return GAME_BOARD;
     }
@@ -59,6 +60,7 @@ public class LadderAndSnake {
     }
 
     /* PUBLIC METHODS */
+
     public void play() {
 
     }
@@ -74,7 +76,7 @@ public class LadderAndSnake {
         for (int row = BOARD_SIZE * height; row >= 0; row--) {
             for (int column = 0; column <= BOARD_SIZE * width; column++) {
 
-                if (row == BOARD_SIZE * height - 2 && column == BOARD_SIZE * width - 3) System.out.print("Winner winner chicken dinner!"); //todo lul just remove this hehe
+                //if (row == BOARD_SIZE * height - 2 && column == BOARD_SIZE * width - 3) System.out.print("Winner winner chicken dinner!"); //todo lul just remove this hehe
 
                 if (row == BOARD_SIZE * height) { //Top line
 
