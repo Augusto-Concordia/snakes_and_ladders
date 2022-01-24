@@ -8,29 +8,21 @@
 
 package com.amp.snakes;
 
+import com.amp.snakes.enums.SquareType;
+import com.amp.snakes.models.Player;
+import com.amp.snakes.models.Square;
 import com.amp.snakes.utility.ConfigHandler;
 
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class LadderAndSnake {
     private final Square[][] GAME_BOARD;
     private final int BOARD_SIZE;
     private final int NB_PLAYERS;
 
-    /* ACCESSORS & MUTATORS */
-
-    public Square[][] getGAME_BOARD() {
-        return GAME_BOARD;
-    }
-
-    public int getBOARD_SIZE() {
-        return BOARD_SIZE;
-    }
-
-    public int getNB_PLAYERS() {
-        return NB_PLAYERS;
-    }
+    private Player[] players;
+    private boolean hasGameStarted;
+    private boolean hasGameFinished;
 
     /* CONSTRUCTORS */
 
@@ -58,14 +50,26 @@ public class LadderAndSnake {
         this.GAME_BOARD = Objects.requireNonNull(GAME_BOARD).clone();
     }
 
+    /* ACCESSORS & MUTATORS */
+
+    public Square[][] getGAME_BOARD() {
+        return GAME_BOARD;
+    }
+
+    public int getBOARD_SIZE() {
+        return BOARD_SIZE;
+    }
+
+    public int getNB_PLAYERS() {
+        return NB_PLAYERS;
+    }
+
     /* PUBLIC METHODS */
 
     public void play() {
+        if (!hasGameStarted) firstTimeSetup();
 
-    }
-
-    public int flipDice() {
-        return (new Random()).nextInt(5) + 1;
+        playOneTurn();
     }
 
     public void printBoard() {
@@ -104,11 +108,23 @@ public class LadderAndSnake {
                     } else if (column % width == 0) { //Middle separator
                         System.out.print("│");
                     } else { //Information inside a square
+                        int boardRow = row / height;
+                        int adjustedBoardColumn = boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width;
                         if ((row - 1) % height == 0 && (column - 1) % width == 0) { //Bottom left corner of a square
                             //if it's an odd-numbered row, flip it to match a real board configuration
-                            int boardRow = row / height;
-                            System.out.printf("%1$-3d", getGAME_BOARD()[boardRow][boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width].getNB());
+                            System.out.printf("%1$-3d", getGAME_BOARD()[boardRow][adjustedBoardColumn].getNB());
                             skip = 2;
+                        } else if ((row + 2) % height == 0 && (column - 1) % width == 0) { //middle left corner of a square
+                            //display all players on the current square
+                            ArrayList<Player> squarePlayers = getGAME_BOARD()[row / height][adjustedBoardColumn].getCurrentPlayers();
+
+                            if (!squarePlayers.isEmpty())
+                                for (Player player : squarePlayers) {
+                                    System.out.printf("%-" + (4 / squarePlayers.size()) + "s", player.getNAME());
+                                }
+                            else
+                                System.out.print("    ");
+                            skip = 3;
                         } else if ((row + 1) % height == 0 && (column - 1) % width == 0) { //top left corner of a square
                             switch (getGAME_BOARD()[row / height][column / width].getLINKED_TYPE().toString()) {
                                 case ("None") -> System.out.print("     ");
@@ -127,10 +143,102 @@ public class LadderAndSnake {
             System.out.println();
         }
     }
-
 //╔═╤═╗
 //║ │ ║
 //╟─┼─╢
 //║ │ ║
 //╚═╧═╝
+
+    /* PRIVATE METHODS */
+
+    private void firstTimeSetup() {
+        System.out.println("Game is played by " + getNB_PLAYERS() + " players.");
+
+        System.out.println();
+
+        players = new Player[getNB_PLAYERS()];
+
+        System.out.println("Please name yourselves..."); //TODO: ask for choice of color too!
+
+        Scanner playerName = new Scanner(System.in);
+
+        for (int i = 0; i < getNB_PLAYERS(); i++) {
+            System.out.print("Name for Player " + (i + 1) + ": ");
+            players[i] = new Player(playerName.nextLine());
+        }
+
+        playerName.close();
+
+        System.out.println("Thank you!");
+
+        System.out.println();
+
+        System.out.println("Now deciding which player is starting:"); //TODO: do we wanna manually resolve ties?
+
+        for (int i = 0; i < getNB_PLAYERS(); i++) {
+            playerFlipDice(i);
+        }
+
+        Arrays.sort(players);
+
+        System.out.println();
+
+        System.out.println("Playing order is: ");
+
+        for (int i = 0; i < getNB_PLAYERS(); i++) {
+            System.out.println((i + 1) + ". " + players[i].getNAME());
+        }
+
+        System.out.println();
+
+        hasGameStarted = true;
+    }
+
+    private void playOneTurn() {
+        for (int i = 0; i < getNB_PLAYERS(); i++) {
+            playerFlipDice(i);
+            playerMove(i);
+        }
+    }
+
+    private void playerMove(int index) {
+        //removes the player from its old square
+        getGAME_BOARD()[(players[index].getPosition() - 1) / getBOARD_SIZE()][(players[index].getPosition() - 1) % getBOARD_SIZE()].removeCurrentPlayer(players[index]);
+
+        players[index].advancePosition(players[index].getLastRoll());
+
+        //puts the player on its new square
+        Square playerSquare = getGAME_BOARD()[(players[index].getPosition() - 1) / getBOARD_SIZE()][(players[index].getPosition() - 1) % getBOARD_SIZE()];
+        playerSquare.addCurrentPlayer(players[index]);
+
+        printBoard();
+
+        System.out.println();
+
+        if (playerSquare.getLINKED_SQUARE() != -1) {
+            System.out.println(playerSquare.getLINKED_TYPE() == SquareType.Snake ? "Uh oh... Down " + players[index].getNAME() + " goes..." : "Hurray! Up " + players[index].getNAME() + " goes!");
+
+            //removes the player from its old square
+            Square linkedSquare = getGAME_BOARD()[(playerSquare.getLINKED_SQUARE() - 1) / getBOARD_SIZE()][(playerSquare.getLINKED_SQUARE() - 1) % getBOARD_SIZE()];
+            playerSquare.removeCurrentPlayer(players[index]);
+
+            players[index].setPosition(playerSquare.getLINKED_SQUARE());
+
+            //puts the player on its new square
+            linkedSquare.addCurrentPlayer(players[index]);
+
+            printBoard();
+
+            System.out.println();
+        }
+    }
+
+    private void playerFlipDice(int index) {
+        players[index].setLastRoll(flipDice());
+        System.out.println(players[index].getNAME() + " rolled a " + players[index].getLastRoll() + "!");
+    }
+
+    private int flipDice() {
+        return (new Random()).nextInt(5) + 1;
+    }
 }

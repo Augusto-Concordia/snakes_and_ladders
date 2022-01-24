@@ -8,7 +8,7 @@
 
 package com.amp.snakes.utility;
 
-import com.amp.snakes.Square;
+import com.amp.snakes.models.Square;
 import com.amp.snakes.enums.SquareType;
 
 import java.io.File;
