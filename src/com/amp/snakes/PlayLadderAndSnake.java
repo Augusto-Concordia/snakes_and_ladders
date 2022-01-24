@@ -11,7 +11,7 @@ package com.amp.snakes;
 public class PlayLadderAndSnake {
 
     public static void main(String[] args) {
-        LadderAndSnake game = new LadderAndSnake(10, 2);
+        LadderAndSnake game = new LadderAndSnake(2);
         game.printBoard();
     }
 }

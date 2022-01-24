@@ -35,15 +35,15 @@ public class LadderAndSnake {
 
     /* CONSTRUCTORS */
 
-    public LadderAndSnake(int BOARD_SIZE, int NB_PLAYERS) {
-        this(BOARD_SIZE, ConfigHandler.getBoardConfig(null), NB_PLAYERS);
+    public LadderAndSnake(int NB_PLAYERS) {
+        this(ConfigHandler.getBoardConfig(null), NB_PLAYERS);
     }
 
     public LadderAndSnake(LadderAndSnake ladderAndSnake) {
-        this(ladderAndSnake.BOARD_SIZE, ladderAndSnake.GAME_BOARD, ladderAndSnake.NB_PLAYERS);
+        this(ladderAndSnake.GAME_BOARD, ladderAndSnake.NB_PLAYERS);
     }
 
-    private LadderAndSnake(int BOARD_SIZE, Square[][] GAME_BOARD, int NB_PLAYERS) {
+    private LadderAndSnake(Square[][] GAME_BOARD, int NB_PLAYERS) {
         if (GAME_BOARD == null) {
             this.BOARD_SIZE = -1;
             this.NB_PLAYERS = -1;
@@ -54,7 +54,7 @@ public class LadderAndSnake {
             return;
         }
 
-        this.BOARD_SIZE = BOARD_SIZE;
+        this.BOARD_SIZE = GAME_BOARD.length;
         this.NB_PLAYERS = NB_PLAYERS;
         this.GAME_BOARD = Objects.requireNonNull(GAME_BOARD).clone();
     }
