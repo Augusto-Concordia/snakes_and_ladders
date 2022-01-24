@@ -32,9 +32,10 @@ public class ConfigHandler {
         while (rawConfigScanner.hasNextLine()) {
             SquareType squareType = squareTypes[rawConfigScanner.nextInt()];
             int linkedSquare = rawConfigScanner.nextInt();
+            rawConfigScanner.nextLine();
 
             //Inspired from here: https://stackoverflow.com/questions/19320183/1d-array-to-2d-array-mapping
-            board[index / boardSize][index % boardSize] = new Square(linkedSquare, squareType);
+            board[index / boardSize][index % boardSize] = new Square(linkedSquare, index + 1, squareType);
             index++;
         }
         return board;
@@ -50,7 +51,7 @@ public class ConfigHandler {
 
             while (configReader.hasNextLine()) {
                 String currLine = configReader.nextLine();
-                //System.out.println(currLine);
+                //System.out.println(currLine); //todo remove
 
                 if (currLine.isEmpty() || currLine.charAt(0) == '#') continue; //don't read comments or empty lines
 
@@ -64,6 +65,10 @@ public class ConfigHandler {
 
             return data.toString();
         } catch (FileNotFoundException e) {
+            System.out.println("A FileNotFound error occurred when loading a config file at " + path + ".");
+            e.printStackTrace();
+            return "";
+        } catch (Exception e){
             System.out.println("An error occurred when loading a config file at " + path + ".");
             e.printStackTrace();
             return "";

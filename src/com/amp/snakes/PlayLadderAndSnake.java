@@ -10,8 +10,10 @@ package com.amp.snakes;
 
 import com.amp.snakes.utility.ConfigHandler;
 
-public class Main {
+public class PlayLadderAndSnake {
 
     public static void main(String[] args) {
+        LadderAndSnake game = new LadderAndSnake(10, 2);
+        game.printBoard();
     }
 }
