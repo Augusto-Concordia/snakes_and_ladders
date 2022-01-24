@@ -36,7 +36,7 @@ public class LadderAndSnake {
     /* CONSTRUCTORS */
 
     public LadderAndSnake(int BOARD_SIZE, int NB_PLAYERS) {
-        this(BOARD_SIZE, ConfigHandler.getBoardConfig(null, BOARD_SIZE), NB_PLAYERS);
+        this(BOARD_SIZE, ConfigHandler.getBoardConfig(null), NB_PLAYERS);
     }
 
     public LadderAndSnake(LadderAndSnake ladderAndSnake) {
