@@ -8,7 +8,6 @@
 
 package com.amp.snakes;
 
-import com.amp.snakes.enums.SquareType;
 import com.amp.snakes.utility.ConfigHandler;
 
 import java.util.Objects;
@@ -106,7 +105,9 @@ public class LadderAndSnake {
                         System.out.print("│");
                     } else { //Information inside a square
                         if ((row - 1) % height == 0 && (column - 1) % width == 0) { //Bottom left corner of a square
-                            System.out.printf("%1$-3d", getGAME_BOARD()[row / height][column / width].getNB());
+                            //if it's an odd-numbered row, flip it to match a real board configuration
+                            int boardRow = row / height;
+                            System.out.printf("%1$-3d", getGAME_BOARD()[boardRow][boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width].getNB());
                             skip = 2;
                         } else if ((row + 1) % height == 0 && (column - 1) % width == 0) { //top left corner of a square
                             switch (getGAME_BOARD()[row / height][column / width].getLINKED_TYPE().toString()) {
