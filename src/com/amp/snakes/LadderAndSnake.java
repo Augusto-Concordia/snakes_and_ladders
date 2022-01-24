@@ -79,8 +79,6 @@ public class LadderAndSnake {
         for (int row = BOARD_SIZE * height; row >= 0; row--) {
             for (int column = 0; column <= BOARD_SIZE * width; column++) {
 
-                //if (row == BOARD_SIZE * height - 2 && column == BOARD_SIZE * width - 3) System.out.print("Winner winner chicken dinner!"); //todo lul just remove this hehe
-
                 if (row == BOARD_SIZE * height) { //Top line
 
                     if (column == 0) System.out.print("╔"); //Left column
@@ -112,11 +110,11 @@ public class LadderAndSnake {
                         int adjustedBoardColumn = boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width;
                         if ((row - 1) % height == 0 && (column - 1) % width == 0) { //Bottom left corner of a square
                             //if it's an odd-numbered row, flip it to match a real board configuration
-                            System.out.printf("%1$-3d", getGAME_BOARD()[boardRow][adjustedBoardColumn].getNB());
+                            System.out.printf("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getNB());
                             skip = 2;
                         } else if ((row + 2) % height == 0 && (column - 1) % width == 0) { //middle left corner of a square
                             //display all players on the current square
-                            ArrayList<Player> squarePlayers = getGAME_BOARD()[row / height][adjustedBoardColumn].getCurrentPlayers();
+                            ArrayList<Player> squarePlayers = GAME_BOARD[row / height][adjustedBoardColumn].getCurrentPlayers();
 
                             if (!squarePlayers.isEmpty())
                                 for (Player player : squarePlayers) {
@@ -126,10 +124,10 @@ public class LadderAndSnake {
                                 System.out.print("    ");
                             skip = 3;
                         } else if ((row + 1) % height == 0 && (column - 1) % width == 0) { //top left corner of a square
-                            switch (getGAME_BOARD()[row / height][column / width].getLINKED_TYPE().toString()) {
+                            switch (GAME_BOARD[row / height][column / width].getLINKED_TYPE().toString()) {
                                 case ("None") -> System.out.print("     ");
-                                case ("Snake") -> System.out.print("s>" + String.format("%1$-3d", getGAME_BOARD()[row / height][column / width].getLINKED_SQUARE()));
-                                case ("Ladder") -> System.out.print("l>" + String.format("%1$-3d", getGAME_BOARD()[row / height][column / width].getLINKED_SQUARE()));
+                                case ("Snake") -> System.out.print("s>" + String.format("%1$-3d", GAME_BOARD[row / height][column / width].getLINKED_SQUARE()));
+                                case ("Ladder") -> System.out.print("l>" + String.format("%1$-3d", GAME_BOARD[row / height][column / width].getLINKED_SQUARE()));
                             }
                             skip = 4;
                         } else if (skip > 0) {
@@ -152,17 +150,17 @@ public class LadderAndSnake {
     /* PRIVATE METHODS */
 
     private void firstTimeSetup() {
-        System.out.println("Game is played by " + getNB_PLAYERS() + " players.");
+        System.out.println("Game is played by " + NB_PLAYERS + " players.");
 
         System.out.println();
 
-        players = new Player[getNB_PLAYERS()];
+        players = new Player[NB_PLAYERS];
 
         System.out.println("Please name yourselves..."); //TODO: ask for choice of color too!
 
         Scanner playerName = new Scanner(System.in);
 
-        for (int i = 0; i < getNB_PLAYERS(); i++) {
+        for (int i = 0; i < NB_PLAYERS; i++) {
             System.out.print("Name for Player " + (i + 1) + ": ");
             players[i] = new Player(playerName.nextLine());
         }
@@ -173,9 +171,11 @@ public class LadderAndSnake {
 
         System.out.println();
 
-        System.out.println("Now deciding which player is starting:"); //TODO: do we wanna manually resolve ties?
+        //TODO: manually resolve ties!
 
-        for (int i = 0; i < getNB_PLAYERS(); i++) {
+        System.out.println("Now deciding which player is starting:");
+
+        for (int i = 0; i < NB_PLAYERS; i++) {
             playerFlipDice(i);
         }
 
@@ -185,7 +185,7 @@ public class LadderAndSnake {
 
         System.out.println("Playing order is: ");
 
-        for (int i = 0; i < getNB_PLAYERS(); i++) {
+        for (int i = 0; i < NB_PLAYERS; i++) {
             System.out.println((i + 1) + ". " + players[i].getNAME());
         }
 
@@ -195,7 +195,7 @@ public class LadderAndSnake {
     }
 
     private void playOneTurn() {
-        for (int i = 0; i < getNB_PLAYERS(); i++) {
+        for (int i = 0; i < NB_PLAYERS; i++) {
             playerFlipDice(i);
             playerMove(i);
         }
@@ -203,12 +203,12 @@ public class LadderAndSnake {
 
     private void playerMove(int index) {
         //removes the player from its old square
-        getGAME_BOARD()[(players[index].getPosition() - 1) / getBOARD_SIZE()][(players[index].getPosition() - 1) % getBOARD_SIZE()].removeCurrentPlayer(players[index]);
+        GAME_BOARD[(players[index].getPosition() - 1) / BOARD_SIZE][(players[index].getPosition() - 1) % BOARD_SIZE].removeCurrentPlayer(players[index]);
 
         players[index].advancePosition(players[index].getLastRoll());
 
         //puts the player on its new square
-        Square playerSquare = getGAME_BOARD()[(players[index].getPosition() - 1) / getBOARD_SIZE()][(players[index].getPosition() - 1) % getBOARD_SIZE()];
+        Square playerSquare = GAME_BOARD[(players[index].getPosition() - 1) / BOARD_SIZE][(players[index].getPosition() - 1) % BOARD_SIZE];
         playerSquare.addCurrentPlayer(players[index]);
 
         printBoard();
@@ -219,7 +219,7 @@ public class LadderAndSnake {
             System.out.println(playerSquare.getLINKED_TYPE() == SquareType.Snake ? "Uh oh... Down " + players[index].getNAME() + " goes..." : "Hurray! Up " + players[index].getNAME() + " goes!");
 
             //removes the player from its old square
-            Square linkedSquare = getGAME_BOARD()[(playerSquare.getLINKED_SQUARE() - 1) / getBOARD_SIZE()][(playerSquare.getLINKED_SQUARE() - 1) % getBOARD_SIZE()];
+            Square linkedSquare = GAME_BOARD[(playerSquare.getLINKED_SQUARE() - 1) / BOARD_SIZE][(playerSquare.getLINKED_SQUARE() - 1) % BOARD_SIZE];
             playerSquare.removeCurrentPlayer(players[index]);
 
             players[index].setPosition(playerSquare.getLINKED_SQUARE());
