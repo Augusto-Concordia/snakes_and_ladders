@@ -101,11 +101,13 @@ public class LadderAndSnake {
                     else System.out.print("─"); //Inside a square
 
                 } else { //Inside a square
+
                     if (column == 0 || column == BOARD_SIZE * width) { //Left or right column
                         System.out.print("║");
                     } else if (column % width == 0) { //Middle separator
                         System.out.print("│");
                     } else { //Information inside a square
+
                         int boardRow = row / height;
                         int adjustedBoardColumn = boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width;
                         if ((row - 1) % height == 0 && (column - 1) % width == 0) { //Bottom left corner of a square
@@ -135,7 +137,9 @@ public class LadderAndSnake {
                         } else {
                             System.out.print(" ");
                         }
+
                     }
+
                 }
             }
             System.out.println();
