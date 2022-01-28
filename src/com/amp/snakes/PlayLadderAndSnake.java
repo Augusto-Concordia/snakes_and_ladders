@@ -66,7 +66,7 @@ public class PlayLadderAndSnake {
 
         System.out.println();
 
-        StringBuilder choices = new StringBuilder();
+        /*StringBuilder choices = new StringBuilder();
         for (int i = 1; i <= availableColors.size(); i++)
             choices.append(availableColors.get(i - 1).getValNorm()).append("  [ ").append(i).append(" ]").append(Color.RESET.getValNorm());
 
@@ -74,52 +74,63 @@ public class PlayLadderAndSnake {
         System.out.print("Enter the number corresponding to the color you want : ");
 
         Color color = availableColors.get(keyIn.nextInt() - 1);
-        availableColors.remove(color);
+        availableColors.remove(color);*/
 
-        keyIn.close();
+        //keyIn.close(); todo why does this mess up the project?
 
-        return new Player(name, color);
+        return new Player(name, Color.RESET);
     }
 
     private static void orderPlayers(Player[] players) {
-        for (int i = 0; i < players.length; i++)
-            LadderAndSnake.playerFlipDice(i, players);
 
+        //Roll a die for every player
+        for (Player player : players) {
+            player.setLastRoll((new Random()).nextInt(6) + 1);
+            System.out.println(player.getNAME() + " rolled a " + player.getLastRoll() + "!");
+        }
         System.out.println();
-        Arrays.sort(players);
 
-        boolean hasTie = false; //True if there is a tie
-        ArrayList<Player> tiedPlayers = new ArrayList<>(); //All the players with the same dice roll
-        Player[] arrayTies;
+        Arrays.sort(players); //Sort players according to their dice roll
 
+        //Deal with the ties
+
+        boolean hasTie = false; //True if there is a tie, false if not
+        boolean hasSurpassedTie = false; //True if there was a tie, but the number we're currently checking is different, so we passed all the numbers that were the same
+        int beginTieIndex = 0; //Index of the first tied player in the array
+        Player[] arrayTies; //Array with ONLY the tied players
+
+        //Compare each number with the one behind it. If they are the same, but the next one is different, then isolate the tie in arrayTies and order it by calling this method again
         for (int i = 1; i < players.length; i++) {
-            if (players[i].getLastRoll() == players[i - 1].getLastRoll()) { //Tie
+
+            if (!hasTie && players[i].getLastRoll() == players[i - 1].getLastRoll()) { //Beginning of a tie, since hasTie is false
                 hasTie = true;
-                tiedPlayers.add(players[i - 1]);
+                beginTieIndex = i - 1;
             }
+            if (hasTie && players[i].getLastRoll() != players[i - 1].getLastRoll()) hasSurpassedTie = true; //Was a tie, but the current number is different, so we're at the end of tie
 
-            //Reached a different dice roll, so deal with the tie from the previous players
-            if (hasTie && (players[i].getLastRoll() != players[i - 1].getLastRoll() || i == players.length - 1)) {
-                hasTie = false;
+            if (hasTie && (hasSurpassedTie || i == players.length - 1)) { //Check if we were in a tie, OR if we are in a tie and we're at the end of the loop
 
-                if (i == players.length - 1) tiedPlayers.add(players[i]);
-                else tiedPlayers.add(players[i - 1]);
-
-                arrayTies = new Player[tiedPlayers.size()];
-                tiedPlayers.toArray(arrayTies);
-                tiedPlayers.clear();
+                if (hasSurpassedTie) arrayTies = copyNumsInNewArray(players, beginTieIndex, i - 1); //If the tie was surpassed, then stop copying the numbers at the previous one (since the current one is different)
+                else arrayTies = copyNumsInNewArray(players, beginTieIndex, i); //We're at the end of the loop, so the current number is also tied
 
                 System.out.println("We have a tie!");
+                orderPlayers(arrayTies); //Order the tied players
 
-                orderPlayers(arrayTies);
+                System.arraycopy(arrayTies, 0, players, beginTieIndex, arrayTies.length); //Copy the newly sorted players back into the main Player array
 
-                for (int j = i - arrayTies.length; j < i; j++) {
-                    if (i == players.length - 1) players[j + 1] = arrayTies[j - i + arrayTies.length];
-                    else players[j] = arrayTies[j - i + arrayTies.length];
-                }
+                //Reset variables
+                hasTie = false;
+                hasSurpassedTie = false;
             }
         }
 
+    }
+
+    private static Player[] copyNumsInNewArray(Player[] players, int beginIndex, int endIndex) {
+
+        Player[] newArray = new Player[endIndex - beginIndex + 1];
+        System.arraycopy(players, beginIndex, newArray, 0, endIndex - beginIndex + 1);
+        return newArray;
     }
 
 }

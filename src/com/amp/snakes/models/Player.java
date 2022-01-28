@@ -23,7 +23,7 @@ public class Player implements Comparable<Player> {
     }
     public String getShortName(){
         if (NAME.length() >= 2) return COLOR.getValNorm() + NAME.substring(0,2) + Color.RESET.getValNorm();
-        else return getNAME();
+        else return COLOR.getValNorm() + (NAME + " ") + Color.RESET.getValNorm();
     }
 
     public int getLastRoll() {
@@ -36,7 +36,7 @@ public class Player implements Comparable<Player> {
 
     public int getPosition() {
         // since position is not 0-based, position can never be 0 (as the array index would be -1)
-        return Math.max(position, 1);
+        return Math.max(position, 1); //todo faire un if pour s'assurer que c'est pas un 0 quand on appelle cette methode au lieu de faire un max ici
     }
 
     public void setPosition(int position) {

@@ -13,7 +13,7 @@ public enum Color {
     PURPLE("\033[0;35m", "\033[1;35m", "\033[4;35m"),
     CYAN("\033[0;36m", "\033[1;36m", "\033[4;36m"),
 
-    BLACK_BOLD(null, "\033[1;30m", null); //used in menus
+    BLACK_BOLD(null, "\033[1;30m", null); //todo remove this if not needed at the end
 
     private final String valNorm;
     private final String valBold;
@@ -33,7 +33,7 @@ public enum Color {
         return valBold;
     }
 
-    public String getValUnder() {
+    public String getValUnder() { //todo remove this too
         return valUnder;
     }
 
