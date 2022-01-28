@@ -1,23 +1,29 @@
 package com.amp.snakes.models;
 
+import com.amp.snakes.enums.Color;
+
 public class Player implements Comparable<Player> {
     private final String NAME;
-    //private final Color color; //TODO: to implement colors
+    private final Color COLOR;
 
     private int lastRoll = -1;
     private int position = 0;
 
     /* CONSTRUCTORS */
 
-    public Player(String NAME)
-    {
+    public Player(String NAME, Color COLOR) {
         this.NAME = NAME;
+        this.COLOR = COLOR;
     }
 
     /* ACCESSORS & MUTATORS */
 
     public String getNAME() {
-        return NAME;
+        return COLOR.getValNorm() + NAME + Color.RESET.getValNorm();
+    }
+    public String getShortName(){
+        if (NAME.length() >= 2) return COLOR.getValNorm() + NAME.substring(0,2) + Color.RESET.getValNorm();
+        else return getNAME();
     }
 
     public int getLastRoll() {

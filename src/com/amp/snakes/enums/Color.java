@@ -38,18 +38,18 @@ public enum Color {
     }
 
     /**
-     * To have an arrayList with the base colors (without reset or BLACK_BOLD)
+     * To have an arraylist with the base colors (without reset or BLACK_BOLD)
      *
      * @return Arraylist with the base colors
      */
     public static ArrayList<Color> getBaseColors() {
-        ArrayList<Color> couleurs = new ArrayList<Color>();
-        couleurs.add(RED);
-        couleurs.add(GREEN);
-        couleurs.add(YELLOW);
-        couleurs.add(BLUE);
-        couleurs.add(PURPLE);
-        couleurs.add(CYAN);
-        return couleurs;
+        ArrayList<Color> colors = new ArrayList<Color>();
+        colors.add(RED);
+        colors.add(GREEN);
+        colors.add(YELLOW);
+        colors.add(BLUE);
+        colors.add(PURPLE);
+        colors.add(CYAN);
+        return colors;
     }
 }

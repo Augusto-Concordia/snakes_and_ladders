@@ -8,6 +8,7 @@
 
 package com.amp.snakes;
 
+import com.amp.snakes.enums.Color;
 import com.amp.snakes.enums.SquareType;
 import com.amp.snakes.models.Player;
 import com.amp.snakes.models.Square;
@@ -20,21 +21,21 @@ public class LadderAndSnake {
     private final int BOARD_SIZE;
     private final int NB_PLAYERS;
 
-    private Player[] players;
-    private boolean hasGameStarted;
+    private static Player[] players;
+
     private boolean hasGameFinished;
 
     /* CONSTRUCTORS */
 
-    public LadderAndSnake(int NB_PLAYERS) {
-        this(ConfigHandler.getBoardConfig(null), NB_PLAYERS);
+    public LadderAndSnake(Player[] players) {
+        this(ConfigHandler.getBoardConfig(null), players);
     }
 
     public LadderAndSnake(LadderAndSnake ladderAndSnake) {
-        this(ladderAndSnake.GAME_BOARD, ladderAndSnake.NB_PLAYERS);
+        this(ladderAndSnake.GAME_BOARD, getPlayers());
     }
 
-    private LadderAndSnake(Square[][] GAME_BOARD, int NB_PLAYERS) {
+    private LadderAndSnake(Square[][] GAME_BOARD, Player[] players) {
         if (GAME_BOARD == null) {
             this.BOARD_SIZE = -1;
             this.NB_PLAYERS = -1;
@@ -45,8 +46,12 @@ public class LadderAndSnake {
             return;
         }
 
+        LadderAndSnake.players = new Player[players.length];
+        for (int i = 0; i < players.length; i++) {
+            LadderAndSnake.players[i] = players[i];
+        }
         this.BOARD_SIZE = GAME_BOARD.length;
-        this.NB_PLAYERS = NB_PLAYERS;
+        this.NB_PLAYERS = players.length;
         this.GAME_BOARD = Objects.requireNonNull(GAME_BOARD).clone();
     }
 
@@ -64,20 +69,33 @@ public class LadderAndSnake {
         return NB_PLAYERS;
     }
 
+    public static Player[] getPlayers() {
+        return players;
+    }
+
     /* PUBLIC METHODS */
 
     public void play() {
-        if (!hasGameStarted) firstTimeSetup();
-
         playOneTurn();
     }
 
+    public static void playerFlipDice(int index, Player[] players) {
+        players[index].setLastRoll(flipDice());
+        System.out.println(players[index].getNAME() + " rolled a " + players[index].getLastRoll() + "!");
+    }
+
     public void printBoard() {
-        int width = 6;
+        //╔═╤═╗
+        //║ │ ║
+        //╟─┼─╢
+        //╚═╧═╝ todo remove this
+        int width = 12; //todo this will be a private method (move it in the private methods group)
         int height = 4;
         int skip = 0;
         for (int row = BOARD_SIZE * height; row >= 0; row--) {
             for (int column = 0; column <= BOARD_SIZE * width; column++) {
+
+                System.out.print(squareColor(row, column, width, height).getValNorm());
 
                 if (row == BOARD_SIZE * height) { //Top line
 
@@ -109,29 +127,36 @@ public class LadderAndSnake {
                     } else { //Information inside a square
 
                         int boardRow = row / height;
-                        int adjustedBoardColumn = boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width;
+                        int adjustedBoardColumn = boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width; //if it's an odd-numbered row, flip it to match a real board configuration
+
                         if ((row - 1) % height == 0 && (column - 1) % width == 0) { //Bottom left corner of a square
-                            //if it's an odd-numbered row, flip it to match a real board configuration
-                            System.out.printf("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getNB());
+
+                            System.out.print(GAME_BOARD[boardRow][adjustedBoardColumn].getCOLOR().getValBold() + String.format("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getNB()) + Color.RESET.getValBold());
                             skip = 2;
+
                         } else if ((row + 2) % height == 0 && (column - 1) % width == 0) { //middle left corner of a square
                             //display all players on the current square
                             ArrayList<Player> squarePlayers = GAME_BOARD[row / height][adjustedBoardColumn].getCurrentPlayers();
 
-                            if (!squarePlayers.isEmpty())
+                            if (!squarePlayers.isEmpty()) {
                                 for (Player player : squarePlayers) {
-                                    System.out.printf("%-" + (4 / squarePlayers.size()) + "s", player.getNAME());
+                                    System.out.print(player.getShortName() + " ");
+                                    skip += player.getShortName().length() - 11;
                                 }
-                            else
-                                System.out.print("    ");
-                            skip = 3;
-                        } else if ((row + 1) % height == 0 && (column - 1) % width == 0) { //top left corner of a square
-                            switch (GAME_BOARD[row / height][column / width].getLINKED_TYPE().toString()) {
-                                case ("None") -> System.out.print("     ");
-                                case ("Snake") -> System.out.print("s>" + String.format("%1$-3d", GAME_BOARD[row / height][column / width].getLINKED_SQUARE()));
-                                case ("Ladder") -> System.out.print("l>" + String.format("%1$-3d", GAME_BOARD[row / height][column / width].getLINKED_SQUARE()));
+                            } else {
+                                skip += 2;
+                                System.out.print("   ");
                             }
-                            skip = 4;
+
+                        } else if ((row + 1) % height == 0 && (column - 1) % width == 0) { //top left corner of a square
+                            System.out.print(GAME_BOARD[boardRow][adjustedBoardColumn].getCOLOR().getValBold());
+                            switch (GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_TYPE().toString()) {
+                                case ("None") -> System.out.print("           ");
+                                case ("Snake") -> System.out.print("DOWN TO " + String.format("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_SQUARE()));
+                                case ("Ladder") -> System.out.print("UP TO " + String.format("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_SQUARE()) + "  ");
+                            }
+                            System.out.print(Color.RESET.getValBold());
+                            skip = 10;
                         } else if (skip > 0) {
                             skip--;
                         } else {
@@ -141,66 +166,61 @@ public class LadderAndSnake {
                     }
 
                 }
+                System.out.print(Square.getNEUTRAL_COLOR().getValNorm());
             }
             System.out.println();
         }
     }
-//╔═╤═╗
-//║ │ ║
-//╟─┼─╢
-//║ │ ║
-//╚═╧═╝
+
 
     /* PRIVATE METHODS */
 
-    private void firstTimeSetup() {
-        System.out.println("Game is played by " + NB_PLAYERS + " players.");
+    private Color squareColor(int row, int column, int width, int height) {
 
-        System.out.println();
+        boolean isVerticalEdge = column % width == 0;
+        boolean isHorizEdge = row % height == 0;
 
-        players = new Player[NB_PLAYERS];
+        if (isVerticalEdge && isHorizEdge) return Square.getNEUTRAL_COLOR(); //Corner
 
-        System.out.println("Please name yourselves..."); //TODO: ask for choice of color too!
+        int boardRow = row / height;
+        if (boardRow >= BOARD_SIZE) boardRow--; //Top row of pixels
 
-        Scanner playerName = new Scanner(System.in);
+        boolean isInverted = boardRow % 2 != 0; //True if column goes from right to left
+        int boardColumn = isInverted ? BOARD_SIZE - column / width - 1 : column / width;
+        if (boardColumn >= BOARD_SIZE) boardColumn--; //Right column
+        if (boardColumn < 0) boardColumn++; //Left column
 
-        for (int i = 0; i < NB_PLAYERS; i++) {
-            System.out.print("Name for Player " + (i + 1) + ": ");
-            players[i] = new Player(playerName.nextLine());
+        boolean snakeNearby = GAME_BOARD[boardRow][boardColumn].getLINKED_TYPE().toString().equals("Snake"); //True if snake square nearby, false if not
+        boolean ladderNearby = GAME_BOARD[boardRow][boardColumn].getLINKED_TYPE().toString().equals("Ladder"); //True if ladder square nearby, false if not
+
+        //Check the edges
+        if (isVerticalEdge && column != BOARD_SIZE * width) { //Check the right edge of a square
+            if (!isInverted && boardColumn > 0) snakeNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().toString().equals("Snake");
+            else if (isInverted && boardColumn < BOARD_SIZE - 1) snakeNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().toString().equals("Snake");
+
+            if (!isInverted && boardColumn > 0) ladderNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().toString().equals("Ladder");
+            else if (isInverted && boardColumn < BOARD_SIZE - 1) ladderNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().toString().equals("Ladder");
         }
 
-        playerName.close();
+        if (isHorizEdge) { //Check the top edge of a square
+            int otherColumn = isInverted ? column / width : BOARD_SIZE - column / width - 1; //Inverted column (since the row above goes in the opposite direction)
+            if (otherColumn >= BOARD_SIZE) otherColumn--;
+            if (otherColumn < 0) otherColumn++;
 
-        System.out.println("Thank you!");
+            if (boardRow > 0) snakeNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().toString().equals("Snake");
 
-        System.out.println();
-
-        //TODO: manually resolve ties!
-
-        System.out.println("Now deciding which player is starting:");
-
-        for (int i = 0; i < NB_PLAYERS; i++) {
-            playerFlipDice(i);
+            if (boardRow > 0) ladderNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().toString().equals("Ladder");
         }
 
-        Arrays.sort(players);
-
-        System.out.println();
-
-        System.out.println("Playing order is: ");
-
-        for (int i = 0; i < NB_PLAYERS; i++) {
-            System.out.println((i + 1) + ". " + players[i].getNAME());
-        }
-
-        System.out.println();
-
-        hasGameStarted = true;
+        if (snakeNearby && ladderNearby) return Square.getMIXED_COLOR();
+        else if (snakeNearby) return Square.getSNAKE_COLOR();
+        else if (ladderNearby) return Square.getLADDER_COLOR();
+        else return Square.getNEUTRAL_COLOR();
     }
 
     private void playOneTurn() {
         for (int i = 0; i < NB_PLAYERS; i++) {
-            playerFlipDice(i);
+            playerFlipDice(i, players);
             playerMove(i);
         }
     }
@@ -237,12 +257,7 @@ public class LadderAndSnake {
         }
     }
 
-    private void playerFlipDice(int index) {
-        players[index].setLastRoll(flipDice());
-        System.out.println(players[index].getNAME() + " rolled a " + players[index].getLastRoll() + "!");
-    }
-
-    private int flipDice() {
-        return (new Random()).nextInt(5) + 1;
+    private static int flipDice() {
+        return (new Random()).nextInt(2) + 1;
     }
 }
