@@ -24,7 +24,7 @@ public class Square {
     private final SquareType LINKED_TYPE;
     private final Color COLOR;
 
-    private ArrayList<Player> currentPlayers = new ArrayList<>(2);
+    private final ArrayList<Player> CURRENT_PLAYERS = new ArrayList<>(2);
 
     /* CONSTRUCTORS */
 
@@ -58,8 +58,8 @@ public class Square {
         return LINKED_TYPE;
     }
 
-    public ArrayList<Player> getCurrentPlayers() {
-        return currentPlayers;
+    public ArrayList<Player> getCURRENT_PLAYERS() {
+        return CURRENT_PLAYERS;
     }
 
     public Color getCOLOR() {
@@ -83,10 +83,10 @@ public class Square {
     }
 
     public void addCurrentPlayer(Player currentPlayer) {
-        this.currentPlayers.add(currentPlayer);
+        this.CURRENT_PLAYERS.add(currentPlayer);
     }
 
     public void removeCurrentPlayer(Player currentPlayer) {
-        this.currentPlayers.remove(currentPlayer);
+        this.CURRENT_PLAYERS.remove(currentPlayer);
     }
 }

@@ -31,10 +31,6 @@ public class LadderAndSnake {
         this(ConfigHandler.getBoardConfig(null), players);
     }
 
-    public LadderAndSnake(LadderAndSnake ladderAndSnake) {
-        this(ladderAndSnake.GAME_BOARD, getPlayers());
-    }
-
     private LadderAndSnake(Square[][] GAME_BOARD, Player[] players) {
         if (GAME_BOARD == null) {
             this.BOARD_SIZE = -1;
@@ -46,13 +42,11 @@ public class LadderAndSnake {
             return;
         }
 
-        LadderAndSnake.players = new Player[players.length];
-        for (int i = 0; i < players.length; i++) {
-            LadderAndSnake.players[i] = players[i];
-        }
+        LadderAndSnake.players = players.clone();
+
         this.BOARD_SIZE = GAME_BOARD.length;
         this.NB_PLAYERS = players.length;
-        this.GAME_BOARD = Objects.requireNonNull(GAME_BOARD).clone();
+        this.GAME_BOARD = GAME_BOARD.clone();
     }
 
     /* ACCESSORS & MUTATORS */
@@ -75,6 +69,7 @@ public class LadderAndSnake {
 
     /* PUBLIC METHODS */
 
+    //todo: actually play a game
     public void play() {
         playOneTurn();
     }
@@ -84,14 +79,14 @@ public class LadderAndSnake {
         System.out.println(players[index].getNAME() + " rolled a " + players[index].getLastRoll() + "!");
     }
 
-    public void printBoard() {
-        //╔═╤═╗
-        //║ │ ║
-        //╟─┼─╢
-        //╚═╧═╝ todo remove this
-        int width = 12; //todo this will be a private method (move it in the private methods group)
+    /* PRIVATE METHODS */
+
+    private void printBoard() {
+        //todo: comment variables, especially you skip, I've got my eye on ya... -.-
+        int width = 12;
         int height = 4;
         int skip = 0;
+
         for (int row = BOARD_SIZE * height; row >= 0; row--) {
             for (int column = 0; column <= BOARD_SIZE * width; column++) {
 
@@ -136,8 +131,9 @@ public class LadderAndSnake {
 
                         } else if ((row + 2) % height == 0 && (column - 1) % width == 0) { //middle left corner of a square
                             //display all players on the current square
-                            ArrayList<Player> squarePlayers = GAME_BOARD[row / height][adjustedBoardColumn].getCurrentPlayers();
+                            ArrayList<Player> squarePlayers = GAME_BOARD[boardRow][adjustedBoardColumn].getCURRENT_PLAYERS();
 
+                            //todo: fix name display errors
                             if (!squarePlayers.isEmpty()) {
                                 for (Player player : squarePlayers) {
                                     System.out.print(player.getShortName() + " ");
@@ -172,9 +168,6 @@ public class LadderAndSnake {
         }
     }
 
-
-    /* PRIVATE METHODS */
-
     private Color squareColor(int row, int column, int width, int height) {
 
         boolean isVerticalEdge = column % width == 0;
@@ -190,16 +183,16 @@ public class LadderAndSnake {
         if (boardColumn >= BOARD_SIZE) boardColumn--; //Right column
         if (boardColumn < 0) boardColumn++; //Left column
 
-        boolean snakeNearby = GAME_BOARD[boardRow][boardColumn].getLINKED_TYPE().toString().equals("Snake"); //True if snake square nearby, false if not
-        boolean ladderNearby = GAME_BOARD[boardRow][boardColumn].getLINKED_TYPE().toString().equals("Ladder"); //True if ladder square nearby, false if not
+        boolean snakeNearby = GAME_BOARD[boardRow][boardColumn].getLINKED_TYPE().equals(SquareType.Snake); //True if snake square nearby, false if not
+        boolean ladderNearby = GAME_BOARD[boardRow][boardColumn].getLINKED_TYPE().equals(SquareType.Ladder); //True if ladder square nearby, false if not
 
         //Check the edges
         if (isVerticalEdge && column != BOARD_SIZE * width) { //Check the right edge of a square
-            if (!isInverted && boardColumn > 0) snakeNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().toString().equals("Snake");
-            else if (isInverted && boardColumn < BOARD_SIZE - 1) snakeNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().toString().equals("Snake");
+            if (!isInverted && boardColumn > 0) snakeNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().equals(SquareType.Snake);
+            else if (isInverted && boardColumn < BOARD_SIZE - 1) snakeNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().equals(SquareType.Snake);
 
-            if (!isInverted && boardColumn > 0) ladderNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().toString().equals("Ladder");
-            else if (isInverted && boardColumn < BOARD_SIZE - 1) ladderNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().toString().equals("Ladder");
+            if (!isInverted && boardColumn > 0) ladderNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().equals(SquareType.Ladder);
+            else if (isInverted && boardColumn < BOARD_SIZE - 1) ladderNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().equals(SquareType.Ladder);
         }
 
         if (isHorizEdge) { //Check the top edge of a square
@@ -207,9 +200,9 @@ public class LadderAndSnake {
             if (otherColumn >= BOARD_SIZE) otherColumn--;
             if (otherColumn < 0) otherColumn++;
 
-            if (boardRow > 0) snakeNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().toString().equals("Snake");
+            if (boardRow > 0) snakeNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().equals(SquareType.Snake);
 
-            if (boardRow > 0) ladderNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().toString().equals("Ladder");
+            if (boardRow > 0) ladderNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().equals(SquareType.Ladder);
         }
 
         if (snakeNearby && ladderNearby) return Square.getMIXED_COLOR();
@@ -258,6 +251,6 @@ public class LadderAndSnake {
     }
 
     private static int flipDice() {
-        return (new Random()).nextInt(2) + 1;
+        return (new Random()).nextInt(6) + 1;
     }
 }
