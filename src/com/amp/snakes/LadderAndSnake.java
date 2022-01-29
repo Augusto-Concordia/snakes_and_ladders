@@ -14,7 +14,10 @@ import com.amp.snakes.models.Player;
 import com.amp.snakes.models.Square;
 import com.amp.snakes.utility.ConfigHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+import static com.amp.snakes.utility.Globals.SYSTEM_SCANNER;
 
 public class LadderAndSnake {
     private final Square[][] GAME_BOARD;
@@ -69,9 +72,24 @@ public class LadderAndSnake {
 
     /* PUBLIC METHODS */
 
-    //todo: actually play a game
     public void play() {
-        playOneTurn();
+        while (!hasGameFinished) {
+            System.out.println("Press [ENTER] to continue...");
+
+            SYSTEM_SCANNER.nextLine();
+
+            playOneTurn();
+        }
+    }
+
+    public void reset() {
+        for (Player player : players)
+            player.reset();
+
+        for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+            GAME_BOARD[i / BOARD_SIZE][i % BOARD_SIZE].reset();
+
+        hasGameFinished = false;
     }
 
     public void playerFlipDice(int index, Player[] players) {
@@ -137,7 +155,8 @@ public class LadderAndSnake {
                             if (!squarePlayers.isEmpty()) {
                                 for (int i = 0; i < squarePlayers.size(); i++) {
                                     System.out.print(squarePlayers.get(i).getShortName() + " ");
-                                    if (i == 0) skipIterations += 2; else skipIterations += 3;
+                                    if (i == 0) skipIterations += 2;
+                                    else skipIterations += 3;
                                 }
                             } else {
                                 skipIterations += 2;
@@ -189,11 +208,15 @@ public class LadderAndSnake {
 
         //Check the edges
         if (isVerticalEdge && column != BOARD_SIZE * width) { //Check the right edge of a square
-            if (!isInverted && boardColumn > 0) snakeNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().equals(SquareType.Snake);
-            else if (isInverted && boardColumn < BOARD_SIZE - 1) snakeNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().equals(SquareType.Snake);
+            if (!isInverted && boardColumn > 0)
+                snakeNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().equals(SquareType.Snake);
+            else if (isInverted && boardColumn < BOARD_SIZE - 1)
+                snakeNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().equals(SquareType.Snake);
 
-            if (!isInverted && boardColumn > 0) ladderNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().equals(SquareType.Ladder);
-            else if (isInverted && boardColumn < BOARD_SIZE - 1) ladderNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().equals(SquareType.Ladder);
+            if (!isInverted && boardColumn > 0)
+                ladderNearby |= GAME_BOARD[boardRow][boardColumn - 1].getLINKED_TYPE().equals(SquareType.Ladder);
+            else if (isInverted && boardColumn < BOARD_SIZE - 1)
+                ladderNearby |= GAME_BOARD[boardRow][boardColumn + 1].getLINKED_TYPE().equals(SquareType.Ladder);
         }
 
         if (isHorizEdge) { //Check the top edge of a square
@@ -201,9 +224,11 @@ public class LadderAndSnake {
             if (otherColumn >= BOARD_SIZE) otherColumn--;
             if (otherColumn < 0) otherColumn++;
 
-            if (boardRow > 0) snakeNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().equals(SquareType.Snake);
+            if (boardRow > 0)
+                snakeNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().equals(SquareType.Snake);
 
-            if (boardRow > 0) ladderNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().equals(SquareType.Ladder);
+            if (boardRow > 0)
+                ladderNearby |= GAME_BOARD[boardRow - 1][otherColumn].getLINKED_TYPE().equals(SquareType.Ladder);
         }
 
         if (snakeNearby && ladderNearby) return Square.getMIXED_COLOR();
@@ -214,22 +239,34 @@ public class LadderAndSnake {
 
     private void playOneTurn() {
         for (int i = 0; i < NB_PLAYERS; i++) {
+            if (hasGameFinished) break;
+
             playerFlipDice(i, players);
             playerMove(i);
         }
     }
 
     private void playerMove(int index) {
+        boolean hasWon = false;
         //removes the player from its old square
         GAME_BOARD[(players[index].getPosition() - 1) / BOARD_SIZE][(players[index].getPosition() - 1) % BOARD_SIZE].removeCurrentPlayer(players[index]);
 
         players[index].advancePosition(players[index].getLastRoll());
+
+        if (players[index].getPosition() > BOARD_SIZE * BOARD_SIZE) {
+            players[index].setPosition(2 * BOARD_SIZE * BOARD_SIZE - players[index].getPosition());
+        }
 
         //puts the player on its new square
         Square playerSquare = GAME_BOARD[(players[index].getPosition() - 1) / BOARD_SIZE][(players[index].getPosition() - 1) % BOARD_SIZE];
         playerSquare.addCurrentPlayer(players[index]);
 
         printBoard();
+
+        if (players[index].getPosition() == BOARD_SIZE * BOARD_SIZE) {
+            playerWon(index);
+            return;
+        }
 
         System.out.println();
 
@@ -247,8 +284,28 @@ public class LadderAndSnake {
 
             printBoard();
 
+            if (players[index].getPosition() == BOARD_SIZE * BOARD_SIZE) {
+                playerWon(index);
+                return;
+            }
+
             System.out.println();
         }
+    }
+
+    private void playerWon(int index) {
+        System.out.println("CONGRATS! " + players[index].getNAME() + " has won this round!");
+
+        System.out.print("Good luck to ");
+
+        for (int i = 0; i < players.length; i++) {
+            if (i != index) System.out.print(players[i].getNAME() +  " ");
+        }
+
+        System.out.println("next time!");
+        System.out.println();
+
+        hasGameFinished = true;
     }
 
     private int flipDice() {

@@ -89,4 +89,11 @@ public class Square {
     public void removeCurrentPlayer(Player currentPlayer) {
         this.CURRENT_PLAYERS.remove(currentPlayer);
     }
+
+    /* PUBLIC METHODS */
+
+    public void reset()
+    {
+        CURRENT_PLAYERS.clear();
+    }
 }

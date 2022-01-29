@@ -47,6 +47,13 @@ public class Player implements Comparable<Player> {
         this.position += increment;
     }
 
+    /* PUBLIC METHODS */
+
+    public void reset(){
+        lastRoll = -1;
+        position = 0;
+    }
+
     /* OVERRIDES */
 
     @Override
