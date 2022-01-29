@@ -19,11 +19,11 @@ public class Player implements Comparable<Player> {
     /* ACCESSORS & MUTATORS */
 
     public String getNAME() {
-        return COLOR.getValNorm() + NAME + Color.RESET.getValNorm();
+        return COLOR.getValBold() + NAME + Color.RESET.getValBold();
     }
     public String getShortName(){
-        if (NAME.length() >= 2) return COLOR.getValNorm() + NAME.substring(0,2) + Color.RESET.getValNorm();
-        else return COLOR.getValNorm() + (NAME + " ") + Color.RESET.getValNorm();
+        if (NAME.length() >= 2) return COLOR.getValBold() + NAME.substring(0,2) + Color.RESET.getValBold();
+        else return COLOR.getValBold() + (NAME + " ") + Color.RESET.getValBold();
     }
 
     public int getLastRoll() {

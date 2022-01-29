@@ -165,13 +165,13 @@ public class LadderAndSnake {
 
                         } else if ((row + 1) % height == 0 && (column - 1) % width == 0) { //top left corner of a square
                             //display where snake or ladder goes (if there's one of them)
-                            System.out.print(GAME_BOARD[boardRow][adjustedBoardColumn].getCOLOR().getValBold());
+                            System.out.print(GAME_BOARD[boardRow][adjustedBoardColumn].getCOLOR().getValNorm());
                             switch (GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_TYPE().toString()) {
                                 case ("None") -> System.out.print("           ");
                                 case ("Snake") -> System.out.print("DOWN TO " + String.format("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_SQUARE()));
                                 case ("Ladder") -> System.out.print("UP TO " + String.format("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_SQUARE()) + "  ");
                             }
-                            System.out.print(Color.RESET.getValBold());
+                            System.out.print(Color.RESET.getValNorm());
                             skipIterations = 10;
                         } else if (skipIterations > 0) {
                             skipIterations--;
