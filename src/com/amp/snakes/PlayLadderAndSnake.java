@@ -60,25 +60,36 @@ public class PlayLadderAndSnake {
     }
 
     private static int askNumberOfPlayers() {
-        int input;
         int attempts = 0;
+        int input = 0;
+        boolean error;
 
         do {
-            input = SYSTEM_SCANNER.nextInt();
+            error = false;
 
-            if (input > 4 || input < 2) {
+            try {
+                input = SYSTEM_SCANNER.nextInt();
+            } catch (Exception e) {
+                error = true;
+                SYSTEM_SCANNER.next(); //throwaway
+            }
+
+            error |= (input > 4 || input < 2);
+
+            if (error) {
                 attempts++;
 
-                System.out.print("Bad Attempt " + attempts + " - Invalid # of players... ");
+                System.out.print("Bad Attempt " + attempts + " - Invalid # of players or invalid input... ");
 
-                if (attempts < 4) System.out.println("Please try again!");
+                if (attempts < 4) {
+                    System.out.println("Please try again!");
+                }
                 else {
                     System.out.println("Attempts exhausted: program will now exit!");
                     System.exit(0);
                 }
             }
-
-        } while (input > 4 || input < 2);
+        } while (error);
         return input;
     }
 
