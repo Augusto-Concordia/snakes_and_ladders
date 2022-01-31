@@ -26,17 +26,15 @@ public class PlayLadderAndSnake {
 
         while (playAgain) {
             boolean newPlayers = true;
-            if (players != null)
-            {
+            if (players != null) {
                 System.out.println("Do you wish to re-enter players? (Y/N)");
                 String answer = SYSTEM_SCANNER.nextLine();
                 newPlayers = answer.equals("Y");
             }
 
-            if (newPlayers)
-            {
+            if (newPlayers) {
                 System.out.println("Welcome! How many players are you? (Between 2 and 4 inclusively)");
-                players = new Player[SYSTEM_SCANNER.nextInt()];
+                players = new Player[askNumberOfPlayers()];
 
                 firstTimeSetup(players);
 
@@ -59,6 +57,29 @@ public class PlayLadderAndSnake {
         System.out.println("Thanks for playing!");
 
         SYSTEM_SCANNER.close();
+    }
+
+    private static int askNumberOfPlayers() {
+        int input;
+        int attempts = 0;
+
+        do {
+            input = SYSTEM_SCANNER.nextInt();
+
+            if (input > 4 || input < 2) {
+                attempts++;
+
+                System.out.print("Bad Attempt " + attempts + " - Invalid # of players... ");
+
+                if (attempts < 4) System.out.println("Please try again!");
+                else {
+                    System.out.println("Attempts exhausted: program will now exit!");
+                    System.exit(0);
+                }
+            }
+
+        } while (input > 4 || input < 2);
+        return input;
     }
 
     private static void firstTimeSetup(Player[] players) {
