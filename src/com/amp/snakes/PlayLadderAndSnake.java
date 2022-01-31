@@ -125,10 +125,24 @@ public class PlayLadderAndSnake {
         System.out.println(choices);
         System.out.print("Enter the number corresponding to the color you want : ");
 
-        Color color = availableColors.get(SYSTEM_SCANNER.nextInt() - 1);
-        availableColors.remove(color);
-
-        return new Player(name, color);
+        String answer = SYSTEM_SCANNER.nextLine();
+        Color color;
+        while (true) {
+            try {
+                if (Integer.parseInt(answer) < 1 || Integer.parseInt(answer) > availableColors.size()) {
+                    System.out.println("Please enter a number between 1 and " + availableColors.size() + "!");
+                } else {
+                    color = availableColors.get(Integer.parseInt(answer) - 1);
+                    availableColors.remove(color);
+                    return new Player(name, color);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number!");
+            } catch (Exception e) {
+                System.out.println("Exception other than NumberFormatException during validation of the choice of color.\n\n" + e.getMessage());
+            }
+            answer = SYSTEM_SCANNER.nextLine();
+        }
     }
 
     private static void orderPlayers(Player[] players) {
