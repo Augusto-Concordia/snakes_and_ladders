@@ -1,3 +1,11 @@
+// -----------------------------------------------------
+// Assignment 1 - COMP 249
+// Due Date: February 7th
+// Question: Part I
+// Written by: Augusto Mota Pinheiro (40208080)
+//             Michaël Gugliandolo (40213419)
+// -----------------------------------------------------
+
 package com.amp.snakes.enums;
 
 import java.util.ArrayList;
@@ -11,15 +19,13 @@ public enum Color {
     YELLOW("\033[0;33m", "\033[1;33m", "\033[4;33m"),
     BLUE("\033[0;34m", "\033[1;34m", "\033[4;34m"),
     PURPLE("\033[0;35m", "\033[1;35m", "\033[4;35m"),
-    CYAN("\033[0;36m", "\033[1;36m", "\033[4;36m"),
-
-    BLACK_BOLD(null, "\033[1;30m", null); //todo remove this if not needed at the end
+    CYAN("\033[0;36m", "\033[1;36m", "\033[4;36m");
 
     private final String valNorm;
     private final String valBold;
     private final String valUnder;
 
-    private Color(String valNorm, String valBold, String valUnder) {
+    Color(String valNorm, String valBold, String valUnder) {
         this.valNorm = valNorm;
         this.valBold = valBold;
         this.valUnder = valUnder;
@@ -33,7 +39,7 @@ public enum Color {
         return valBold;
     }
 
-    public String getValUnder() { //todo remove this too
+    public String getValUnder() {
         return valUnder;
     }
 
@@ -43,7 +49,7 @@ public enum Color {
      * @return Arraylist with the base colors
      */
     public static ArrayList<Color> getBaseColors() {
-        ArrayList<Color> colors = new ArrayList<Color>();
+        ArrayList<Color> colors = new ArrayList<>();
         colors.add(RED);
         colors.add(GREEN);
         colors.add(YELLOW);

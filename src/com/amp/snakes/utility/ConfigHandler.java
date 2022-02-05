@@ -1,6 +1,6 @@
 // -----------------------------------------------------
 // Assignment 1 - COMP 249
-// Due Date: February 4th
+// Due Date: February 7th
 // Question: Part I
 // Written by: Augusto Mota Pinheiro (40208080)
 //             Michaël Gugliandolo (40213419)
@@ -66,7 +66,6 @@ public class ConfigHandler {
 
             while (configReader.hasNextLine()) {
                 String currLine = configReader.nextLine();
-                //System.out.println(currLine); //todo remove
 
                 if (currLine.isEmpty() || currLine.charAt(0) == '#') continue; //don't read comments or empty lines
 

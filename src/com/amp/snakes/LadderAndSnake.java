@@ -1,6 +1,6 @@
 // -----------------------------------------------------
 // Assignment 1 - COMP 249
-// Due Date: February 4th
+// Due Date: February 7th
 // Question: Part I
 // Written by: Augusto Mota Pinheiro (40208080)
 //             Michaël Gugliandolo (40213419)
@@ -41,6 +41,7 @@ public class LadderAndSnake {
             this.GAME_BOARD = null;
 
             System.out.println("Error: Invalid Board Config File! Current game is borked and will close...");
+            SYSTEM_SCANNER.close();
             System.exit(-1);
             return;
         }
@@ -76,7 +77,7 @@ public class LadderAndSnake {
         while (!hasGameFinished) {
             System.out.println("Press [ENTER] to continue...");
 
-            String temp = SYSTEM_SCANNER.nextLine();
+            SYSTEM_SCANNER.nextLine();
 
             playOneTurn();
         }
@@ -154,9 +155,14 @@ public class LadderAndSnake {
 
                             if (!squarePlayers.isEmpty()) {
                                 for (int i = 0; i < squarePlayers.size(); i++) {
-                                    System.out.print(squarePlayers.get(i).getShortName() + " ");
-                                    if (i == 0) skipIterations += 2;
-                                    else skipIterations += 3;
+                                    if (i == squarePlayers.size() - 1 && squarePlayers.size() >= 4) { //Printing fourth player out of 4
+                                        System.out.print(squarePlayers.get(i).getShortName());
+                                        skipIterations += 2;
+                                    } else {
+                                        System.out.print(squarePlayers.get(i).getShortName() + " ");
+                                        if (i == 0) skipIterations += 2; //First player
+                                        else skipIterations += 3;
+                                    }
                                 }
                             } else {
                                 skipIterations += 2;
@@ -186,6 +192,7 @@ public class LadderAndSnake {
             }
             System.out.println();
         }
+
     }
 
     private Color squareColor(int row, int column, int width, int height) {
@@ -247,7 +254,6 @@ public class LadderAndSnake {
     }
 
     private void playerMove(int index) {
-        boolean hasWon = false;
         //removes the player from its old square
         GAME_BOARD[(players[index].getPosition() - 1) / BOARD_SIZE][(players[index].getPosition() - 1) % BOARD_SIZE].removeCurrentPlayer(players[index]);
 
@@ -299,7 +305,7 @@ public class LadderAndSnake {
         System.out.print("Good luck to ");
 
         for (int i = 0; i < players.length; i++) {
-            if (i != index) System.out.print(players[i].getNAME() +  " ");
+            if (i != index) System.out.print(players[i].getNAME() + " ");
         }
 
         System.out.println("next time!");
