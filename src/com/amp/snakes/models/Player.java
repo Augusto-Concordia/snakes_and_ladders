@@ -23,6 +23,7 @@ public class Player implements Comparable<Player> {
     }
     public String getShortName(){
         if (NAME.length() >= 2) return COLOR.getValBold() + NAME.substring(0,2) + Color.RESET.getValBold();
+        else if (NAME.length() == 0) return "  ";
         else return COLOR.getValBold() + (NAME + " ") + Color.RESET.getValBold();
     }
 

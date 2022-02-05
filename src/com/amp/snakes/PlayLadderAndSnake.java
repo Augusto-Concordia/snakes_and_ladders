@@ -43,12 +43,15 @@ public class PlayLadderAndSnake {
                 game.reset();
 
                 orderPlayers(players);
+                System.out.println("Playing order is: ");
+
+                for (int i = 0; i < players.length; i++)
+                    System.out.println((i + 1) + ". " + players[i].getNAME());
             }
 
             game.play();
 
             System.out.println("Do you wish to play again? (Y/N)");
-            SYSTEM_SCANNER.nextLine(); //throwaway
             String answer = SYSTEM_SCANNER.nextLine();
 
             playAgain = answer.equals("Y");
@@ -61,20 +64,21 @@ public class PlayLadderAndSnake {
 
     private static int askNumberOfPlayers() {
         int attempts = 0;
-        int input = 0;
+        int inputNb = 0;
+        String input;
         boolean error;
 
         do {
             error = false;
 
             try {
-                input = SYSTEM_SCANNER.nextInt();
+                input = SYSTEM_SCANNER.nextLine();
+                inputNb = Integer.parseInt(input);
             } catch (Exception e) {
                 error = true;
-                SYSTEM_SCANNER.next(); //throwaway
             }
 
-            error |= (input > 4 || input < 2);
+            error |= (inputNb > 4 || inputNb < 2);
 
             if (error) {
                 attempts++;
@@ -90,7 +94,8 @@ public class PlayLadderAndSnake {
                 }
             }
         } while (error);
-        return input;
+
+        return inputNb;
     }
 
     private static void firstTimeSetup(Player[] players) {
@@ -122,8 +127,6 @@ public class PlayLadderAndSnake {
         if (step == 0)
             System.out.println("Bear in mind that only the first 2 characters of your names will be shown on the board!");
 
-        SYSTEM_SCANNER.nextLine();
-
         System.out.print("Name for Player " + (step + 1) + ": ");
         String name = SYSTEM_SCANNER.nextLine();
 
@@ -136,24 +139,38 @@ public class PlayLadderAndSnake {
         System.out.println(choices);
         System.out.print("Enter the number corresponding to the color you want : ");
 
-        String answer = SYSTEM_SCANNER.nextLine();
+        String answer;
         Color color;
-        while (true) {
+        boolean error = true;
+        int attempts = 0;
+        do {
+            answer = SYSTEM_SCANNER.nextLine();
             try {
                 if (Integer.parseInt(answer) < 1 || Integer.parseInt(answer) > availableColors.size()) {
                     System.out.println("Please enter a number between 1 and " + availableColors.size() + "!");
                 } else {
-                    color = availableColors.get(Integer.parseInt(answer) - 1);
-                    availableColors.remove(color);
-                    return new Player(name, color);
+                    error = false;
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number!");
             } catch (Exception e) {
                 System.out.println("Exception other than NumberFormatException during validation of the choice of color.\n\n" + e.getMessage());
+                System.out.println("\nPlease try again!");
             }
-            answer = SYSTEM_SCANNER.nextLine();
-        }
+
+            if (error) {
+                attempts++;
+                System.out.println("Bad Attempt " + attempts + "...");
+                if (attempts >= 4) {
+                    System.out.println("Attempts exhausted: program will now exit!");
+                    System.exit(0);
+                }
+            }
+        } while (error);
+
+        color = availableColors.get(Integer.parseInt(answer) - 1);
+        availableColors.remove(color);
+        return new Player(name, color);
     }
 
     private static void orderPlayers(Player[] players) {

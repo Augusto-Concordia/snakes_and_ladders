@@ -76,7 +76,7 @@ public class LadderAndSnake {
         while (!hasGameFinished) {
             System.out.println("Press [ENTER] to continue...");
 
-            SYSTEM_SCANNER.nextLine();
+            String temp = SYSTEM_SCANNER.nextLine();
 
             playOneTurn();
         }
