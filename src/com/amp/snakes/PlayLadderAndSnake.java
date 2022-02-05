@@ -22,6 +22,10 @@ import static com.amp.snakes.utility.Globals.SYSTEM_SCANNER;
  */
 public class PlayLadderAndSnake {
 
+    /**
+     * Driver method that runs the program
+     * @param args Arguments for driver method
+     */
     public static void main(String[] args) {
         boolean playAgain = true; //True if user wants to play again, false if not (true by default to enter the while loop)
 
