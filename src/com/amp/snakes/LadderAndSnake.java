@@ -147,7 +147,6 @@ public class LadderAndSnake {
      * Prints the game board to the console
      */
     private void printBoard() {
-        // todo: comment variables, especially you skip, I've got my eye on ya... -.-
         int width = 12;
         int height = 4;
 
@@ -208,7 +207,7 @@ public class LadderAndSnake {
                         // if it's an odd-numbered row, flip it to match a real board configuration
                         int adjustedBoardColumn = boardRow % 2 != 0 ? BOARD_SIZE - 1 - column / width : column / width;
 
-                        // Bottom left corner of a square display square number
+                        // Bottom left corner of a square, display square number
                         if ((row - 1) % height == 0 && (column - 1) % width == 0) {
                             System.out.print(GAME_BOARD[boardRow][adjustedBoardColumn].getCOLOR().getValBold()
                                     + String.format("%1$-3d", GAME_BOARD[boardRow][adjustedBoardColumn].getNB())
@@ -216,7 +215,7 @@ public class LadderAndSnake {
                             skipIterations = 2;
 
                         }
-                        // middle left corner of a square display all players on the current square
+                        // middle left corner of a square, display all players on the current square
                         else if ((row + 2) % height == 0 && (column - 1) % width == 0) {
                             ArrayList<Player> squarePlayers = GAME_BOARD[boardRow][adjustedBoardColumn].getCURRENT_PLAYERS();
 
@@ -240,8 +239,7 @@ public class LadderAndSnake {
                             }
 
                         }
-                        // top left corner of a square display where snake or ladder goes (if there's
-                        // one of them)
+                        // top left corner of a square, display where snake or ladder goes (if there's one of them)
                         else if ((row + 1) % height == 0 && (column - 1) % width == 0) {
                             System.out.print(GAME_BOARD[boardRow][adjustedBoardColumn].getCOLOR().getValNorm());
                             switch (GAME_BOARD[boardRow][adjustedBoardColumn].getLINKED_TYPE().toString()) {
@@ -355,7 +353,6 @@ public class LadderAndSnake {
 
             playerFlipDice(i, players);
             playerMove(i);
-            playerWon(i);
         }
     }
 
