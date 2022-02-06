@@ -42,7 +42,7 @@ public class PlayLadderAndSnake {
             if (players != null) { //Players exist, so not first time playing
                 System.out.println("Do you wish to re-enter players? (Y/N)");
                 String answer = SYSTEM_SCANNER.nextLine();
-                newPlayers = answer.equals("Y");
+                newPlayers = answer.equalsIgnoreCase("Y");
             }
 
             if (newPlayers) { //Create players
@@ -66,7 +66,7 @@ public class PlayLadderAndSnake {
             System.out.println("Do you wish to play again? (Y/N)"); //Ask to start over at the end
             String answer = SYSTEM_SCANNER.nextLine();
 
-            playAgain = answer.equals("Y");
+            playAgain = answer.equalsIgnoreCase("Y");
         }
 
         System.out.println("Thanks for playing!");

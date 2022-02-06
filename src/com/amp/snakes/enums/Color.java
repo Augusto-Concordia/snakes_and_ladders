@@ -10,8 +10,10 @@ package com.amp.snakes.enums;
 
 import java.util.ArrayList;
 
+/**
+ * Enum containing all the used colors.
+ */
 public enum Color {
-
     RESET("\033[0m", "\033[0m", "\033[0m"),
 
     RED("\033[0;31m", "\033[1;31m", "\033[4;31m"),
@@ -25,20 +27,42 @@ public enum Color {
     private final String valBold;
     private final String valUnder;
 
-    Color(String valNorm, String valBold, String valUnder) {
+    /**
+     * Default constructor
+     * 
+     * @param valNorm  The normal value.
+     * @param valBold  The bold value.
+     * @param valUnder The underlined value.
+     */
+    private Color(String valNorm, String valBold, String valUnder) {
         this.valNorm = valNorm;
         this.valBold = valBold;
         this.valUnder = valUnder;
     }
 
+    /**
+     * Gets the normal color value.
+     * 
+     * @return The normal color value.
+     */
     public String getValNorm() {
         return valNorm;
     }
 
+    /**
+     * Gets the bold color value.
+     * 
+     * @return The bold color value.
+     */
     public String getValBold() {
         return valBold;
     }
 
+    /**
+     * Gets the underlined color value.
+     * 
+     * @return The underlined color value.
+     */
     public String getValUnder() {
         return valUnder;
     }

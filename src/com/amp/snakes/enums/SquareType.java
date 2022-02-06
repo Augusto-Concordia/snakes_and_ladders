@@ -8,6 +8,9 @@
 
 package com.amp.snakes.enums;
 
+/**
+ * Enum containing all the Square types.
+ */
 public enum SquareType {
     None,
     Snake,

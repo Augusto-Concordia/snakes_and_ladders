@@ -10,6 +10,14 @@ package com.amp.snakes.utility;
 
 import java.util.Scanner;
 
+/**
+ * Global variables and constants.
+ */
 public class Globals {
+    /**
+     * Scanner to be used throughout the program.
+     * 
+     * @see https://stackoverflow.com/questions/48847670/how-can-i-close-a-scanner-that-is-inside-of-a-loop
+     */
     public static final Scanner SYSTEM_SCANNER = new Scanner(System.in);
 }
