@@ -118,7 +118,7 @@ public class Player implements Comparable<Player> {
     /**
      * Compares this player to another player.
      * 
-     * @param other The other player.
+     * @param o The other player.
      * @return The comparison result.
      */
     @Override
