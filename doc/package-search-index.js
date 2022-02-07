@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.amp.snakes"},{"l":"com.amp.snakes.enums"},{"l":"com.amp.snakes.models"},{"l":"com.amp.snakes.utility"}];updateSearchResults();

@@ -12,7 +12,18 @@ package com.amp.snakes.enums;
  * Enum containing all the Square types.
  */
 public enum SquareType {
+    /**
+     * Square is does not have a snake, nor a ladder
+     */
     None,
+
+    /**
+     * Square has a snake connected
+     */
     Snake,
+
+    /**
+     * Square has a ladder connected.
+     */
     Ladder,
 }

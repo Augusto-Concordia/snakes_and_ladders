@@ -17,7 +17,7 @@ public class Globals {
     /**
      * Scanner to be used throughout the program.
      * 
-     * @see https://stackoverflow.com/questions/48847670/how-can-i-close-a-scanner-that-is-inside-of-a-loop
+     * @see <a href="https://stackoverflow.com/questions/48847670/how-can-i-close-a-scanner-that-is-inside-of-a-loop">Stack Overflow</a>
      */
     public static final Scanner SYSTEM_SCANNER = new Scanner(System.in);
 }

@@ -13,6 +13,9 @@ import com.amp.snakes.enums.SquareType;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a game square.
+ */
 public class Square {
     private static final Color SNAKE_COLOR = Color.RED; // The color of a square containing a snake.
     private static final Color LADDER_COLOR = Color.GREEN; // The color of a square containing a ladder.
@@ -104,6 +107,8 @@ public class Square {
 
     /**
      * Gets the constant color of a square containing a snake.
+     *
+     * @return The constant color of a square containing a snake.
      */
     public static Color getSNAKE_COLOR() {
         return SNAKE_COLOR;
@@ -111,6 +116,8 @@ public class Square {
 
     /**
      * Gets the constant color of a square containing a ladder.
+     *
+     * @return The constant color of a square containing a ladder.
      */
     public static Color getLADDER_COLOR() {
         return LADDER_COLOR;
@@ -118,6 +125,8 @@ public class Square {
 
     /**
      * Gets the constant color of a square containing both a snake and a ladder.
+     *
+     * @return The constant color of a square containing both a snake and a ladder.
      */
     public static Color getMIXED_COLOR() {
         return MIXED_COLOR;
@@ -125,6 +134,8 @@ public class Square {
 
     /**
      * Gets the constant color of a square containing nothing.
+     *
+     * @return The constant color of a square containing nothing.
      */
     public static Color getNEUTRAL_COLOR() {
         return NEUTRAL_COLOR;
@@ -135,7 +146,7 @@ public class Square {
     /**
      * Adds a player to the current players on this square.
      *
-     * @param player The player to add.
+     * @param currentPlayer The player to add.
      */
     public void addCurrentPlayer(Player currentPlayer) {
         this.CURRENT_PLAYERS.add(currentPlayer);
@@ -144,7 +155,7 @@ public class Square {
     /**
      * Removes a player from the current players on this square.
      *
-     * @param player The player to remove.
+     * @param currentPlayer The player to remove.
      */
     public void removeCurrentPlayer(Player currentPlayer) {
         this.CURRENT_PLAYERS.remove(currentPlayer);

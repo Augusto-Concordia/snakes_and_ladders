@@ -19,6 +19,9 @@ import java.util.Random;
 
 import static com.amp.snakes.utility.Globals.SYSTEM_SCANNER;
 
+/**
+ * Represents a game of LadderAndSnake.
+ */
 public class LadderAndSnake {
     private final Square[][] GAME_BOARD; // 2D Array for the game board (always a square board)
     private final int BOARD_SIZE; // the size of a side of the game board

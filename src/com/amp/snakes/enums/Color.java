@@ -14,13 +14,39 @@ import java.util.ArrayList;
  * Enum containing all the used colors.
  */
 public enum Color {
+    /**
+     * Represents the default console color
+     */
     RESET("\033[0m", "\033[0m", "\033[0m"),
 
+    /**
+     * Represents red text
+     */
     RED("\033[0;31m", "\033[1;31m", "\033[4;31m"),
+
+    /**
+     * Represents greed text
+     */
     GREEN("\033[0;32m", "\033[1;32m", "\033[4;32m"),
+
+    /**
+     * Represents yellow text
+     */
     YELLOW("\033[0;33m", "\033[1;33m", "\033[4;33m"),
+
+    /**
+     * Represents blue text
+     */
     BLUE("\033[0;34m", "\033[1;34m", "\033[4;34m"),
+
+    /**
+     * Represents purple text
+     */
     PURPLE("\033[0;35m", "\033[1;35m", "\033[4;35m"),
+
+    /**
+     * Represents cyan text
+     */
     CYAN("\033[0;36m", "\033[1;36m", "\033[4;36m");
 
     private final String valNorm;
